@@ -1,0 +1,11 @@
+---
+- hosts: all
+  become: true
+  vars:
+    - version: '{{wildfly_version | default("16.0.0.Final")}}'
+  roles:
+    - base
+
+- hosts: wildfly
+  roles:
+    - { role: wildfly, become: yes }

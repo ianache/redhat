@@ -1,0 +1,9 @@
+connect localhost:9990 -u admin -p {{ admin_password:admin }}
+/profile={{profile:ha}}/subsystem=elytron/key-store={{ keystore_name:CustomKS }}:add(path=server.keystore.jks,relative-to=jboss.server.config.dir,credential-reference={clear-text=secret},type=JKS)
+/profile={{profile:ha}}/subsystem=elytron/key-manager={{ keymanager_name:CustomKM }}:add(key-store={{ keystore_name:CustomKS }},credential-reference={clear-text=secret})
+/profile={{profile:ha}}/subsystem=elytron/server-ssl-context=MySSLContext:add(key-manager=MyCustomKM,protocols=["TLSv1.2"])
+
+/profile={{profile:ha}}/subsystem=undertow/server=default-server/https-listener=https:write-attribute(name=ssl-context,value={{ sslcontext_name:CustomSSLContext}})
+/profile={{profile:ha}}/subsystem=undertow/server=default-server/https-listener=https:undefine-attribute(name=security-realm)
+
+reload

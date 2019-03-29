@@ -1,0 +1,2 @@
+# default variables for wildfly
+version: '{{wildfly_version | default("16.0.0.Final")}}'

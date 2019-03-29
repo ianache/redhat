@@ -1,0 +1,22 @@
+---
+- name: check already downloaded
+  stat: path=/tmp/wildfly-{{version}}.zip
+  register: p
+
+- name: download wildfly
+  get_url:
+    url: https://download.jboss.org/wildfly/{{version}}/wildfly-{{version}}.zip
+    dest: /tmp/wildfly-{{version}}.zip
+  when: p.stat.exists == False
+  
+- name: unpack
+  unarchive: 
+    src: /tmp/wildfly-{{version}}.zip
+    dest: /opt
+    remote_src: yes
+
+- name: install wildfly service
+  template: src=jboss.service.j2 dest=/etc/systemd/system/wildfly.service
+
+- name: enable and start service
+  service: name=wildfly state=started enabled=yes
