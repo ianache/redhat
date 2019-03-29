@@ -3,3 +3,8 @@
   with_items:
     - java-{{ java_version }}-openjdk{{java_variant}}
     - unzip
+    - ntp
+
+- name: "set system date & time"
+  shell: timedatectl set-timezone America/Lima
+
