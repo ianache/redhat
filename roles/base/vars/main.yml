@@ -1,0 +1,4 @@
+# variables for base role
+java_version: 1.8.0
+#java_variant: "-devel"
+java_variant:

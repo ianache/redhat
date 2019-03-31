@@ -1,0 +1,20 @@
+# default variables for wildfly
+version: '{{wildfly_version | default("16.0.0.Final")}}'
+wildfly_admin_username: admin
+wildfly_admin_password: admin
+wildfly_app_username: guest
+wildfly_app_password: guest
+# ports
+wildfly_ports:
+  - { port: 8009, use: "ajp" }
+  - { port: 8080, use: "http" }
+  - { port: 8443, use: "https" }
+  - { port: 4712, use: "txn-recovery-environment" }
+  - { port: 4713, use: "txn-status-manager" }
+  - { port: 3528, use: "iiop" }
+  - { port: 3529, use: "iiop-ssl" }
+  - { port: 23364, use: "modcluster-multicast" }
+  - { port: 45700, use: "jgroups-mping" }
+  - { port: 7600, use: "jgroups-tcp" }
+  - { port: 55200, use: "jgroups-udp_private" }
+  - { port: 45688, use: "jgroups-udp_multicast" }

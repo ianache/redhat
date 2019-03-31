@@ -1,0 +1,5 @@
+- name: install base packages
+  package: name="{{ item }}"
+  with_items:
+    - java-{{ java_version }}-openjdk{{java_variant}}
+    - unzip

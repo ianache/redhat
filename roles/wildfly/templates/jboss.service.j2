@@ -1,0 +1,28 @@
+[Unit]
+Description=Wildfly Application Server
+After=syslog.target network-online.target
+Before=network-online.target
+#httpd.service
+
+[Service]
+Type=simple
+#oneshot
+ExecStart=/opt/wildfly/bin/domain.sh -b=0.0.0.0 -bmanagement=0.0.0.0
+#/usr/lib/systemd/scripts/jboss-host-controller start
+#ExecStop=/usr/lib/systemd/scripts/jboss-host-controller stop
+RemainAfterExit=yes
+Restart=always
+RestartSec=20
+#Environment="JAVA_HOME=/opt/java"
+#Environment="JBOSS_HOME=/opt/jboss"
+#Environment="JBOSS_USER=eap"
+Environment="JBOSS_MODE=domain"
+
+LimitFSIZE=infinity
+LimitCPU=infinity
+LimitAS=infinity
+LimitNOFILE=64000
+LimitNPROC=64000
+
+[Install]
+WantedBy=multi-user.target

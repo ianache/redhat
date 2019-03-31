@@ -1,0 +1,44 @@
+---
+- name: check already downloaded
+  stat: path=/tmp/wildfly-{{version}}.zip
+  register: p
+
+- name: download wildfly
+  get_url:
+    url: https://download.jboss.org/wildfly/{{version}}/wildfly-{{version}}.zip
+    dest: /tmp/wildfly-{{version}}.zip
+  when: p.stat.exists == False
+  
+- name: unpack
+  unarchive: 
+    src: /tmp/wildfly-{{version}}.zip
+    dest: /opt
+    remote_src: yes
+
+- name: create link to install directory
+  file: src=/opt/wildfly-{{version}} dest=/opt/wildfly force=yes state=link
+
+- name: install wildfly service
+  template: src=jboss.service.j2 dest=/etc/systemd/system/wildfly.service
+
+- name: enable and start service
+  service: name=wildfly state=started enabled=yes
+
+- name: create default admin user
+  shell: /opt/wildfly/bin/add-user.sh {{item.realm}} {{item.username}} {{item.password}}
+  with_items:
+    - { realm: '', username: '{{wildfly_admin_username}}', password: '{{wildfly_admin_password}}' }
+    - { realm: '-a', username: '{{wildfly_app_username}}', password: '{{wildfly_app_password}}' } 
+  tags:
+    - adduser
+
+- name: enable firewalld service
+  service: name=firewalld state=started enabled=yes
+  tags:
+    - firewall
+
+- name: enable firewall rules
+  firewalld: permanent=true state=enabled immediate=true port={{item.port}}/tcp
+  with_items: "{{ wildfly_ports }}"
+  tags:
+    - firewall
