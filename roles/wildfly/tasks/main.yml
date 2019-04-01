@@ -18,6 +18,12 @@
 - name: create link to install directory
   file: src=/opt/wildfly-{{version}} dest=/opt/wildfly force=yes state=link
 
+- name: change ip address
+  shell: sed -i s/127\.0\.0\.1/0\.0\.0\.0/g /opt/wildfly/domain/configuration/"{{ item }}"
+  with_items:
+  - host.xml
+  - domain.xml
+
 - name: install wildfly service
   template: src=jboss.service.j2 dest=/etc/systemd/system/wildfly.service
 
