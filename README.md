@@ -1,6 +1,8 @@
 # redhat
 Repositorio para deployment de RedHat
 
+![provisioning architecture](iac.png?raw=true "Infrastructure as a Code")
+
 ## create password vault to encrypt password
 
 ```
